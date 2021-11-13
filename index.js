@@ -121,7 +121,7 @@ async function run() {
 
             const updateDoc = {
                 $set: {
-                    orderstatus: "Confirmed"
+                    orderstatus: "Shipped"
                 },
             };
 
