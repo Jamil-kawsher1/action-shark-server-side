@@ -154,6 +154,14 @@ async function run() {
             }
             res.json({ admin: isAdmin });
         })
+        //delete single Product
+        app.delete("/deleteproduct/:id", async (req, res) => {
+            console.log(req.params.id);
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await productsCollection.deleteOne(query);
+            res.json(result);
+        });
 
     } finally {
         //   await client.close();
