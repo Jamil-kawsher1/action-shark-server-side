@@ -18,6 +18,7 @@ async function run() {
         const productsCollection = database.collection("products");
         const usersCollection = database.collection('users');
         const orderCollection = database.collection('orders');
+        const reviewCollection = database.collection('reviews');
         //geting all product from database
         app.get('/products', async (req, res) => {
             const query = productsCollection.find({});
@@ -56,7 +57,7 @@ async function run() {
         app.put('/users/admin', async (req, res) => {
 
             const user = req.body;
-            console.log(req);
+
 
             const filter = { email: user.email };
 
@@ -127,6 +128,32 @@ async function run() {
             const result = await orderCollection.updateOne(query, updateDoc);
             res.json(result);
         });
+
+
+        // add reviews
+        app.post('/reviews', async (req, res) => {
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review);
+            res.send(result);
+        })
+        //get all user review
+        app.get('/reviews', async (req, res) => {
+            const query = reviewCollection.find({});
+            const result = await query.toArray();
+            res.send(result)
+        })
+
+        //find user from user collectio to check admin or not
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            let isAdmin = false;
+            if (user?.role === 'admin') {
+                isAdmin = true;
+            }
+            res.json({ admin: isAdmin });
+        })
 
     } finally {
         //   await client.close();
